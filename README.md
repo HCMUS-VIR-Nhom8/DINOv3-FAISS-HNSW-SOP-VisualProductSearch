@@ -75,12 +75,13 @@ visual_product_search/
 ```
 
 ## 1. Setup moi truong
+Cho linux:
 
-```linux
+```
 python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 ```
-
+Cho windows
 ```windows
 python -m venv .venv 
 .venv\Scripts\activate
@@ -116,7 +117,7 @@ khong can clone repo).
 `pip install faiss-cpu` la du (co san trong requirements.txt). Rationale lua
 chon HNSW + Dynamic Buffer + Blacklist: `docs/method_faiss_hnsw.md`.
 
-## 5. Chay pipeline BASELINE (Hinh 1.1)
+## 5. Chay pipeline BASELINE
 
 ```bash
 # Offline: build Static Main HNSW tu catalog (Ebay_train.txt)
@@ -128,7 +129,7 @@ python -m online.pipelines.run_online_retrieval \
     --config configs/online.yaml
 ```
 
-## 6. Chay pipeline CAI TIEN (Hinh 2.9)
+## 6. Chay pipeline CAI TIEN
 
 ```bash
 # Them san pham moi ma khong rebuild HNSW
