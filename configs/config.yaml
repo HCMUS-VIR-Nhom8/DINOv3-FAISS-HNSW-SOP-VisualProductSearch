@@ -1,0 +1,35 @@
+dataset:
+  name: stanford_online_products
+  root: data/raw/Stanford_Online_Products
+  train_list: Ebay_train.txt   # dung lam "catalog" cho offline indexing
+  test_list: Ebay_test.txt     # dung lam nguon anh query de test
+
+encoder:
+  backend: hf                  # "hf" (Hugging Face Transformers, khuyen nghi) hoac "torchhub" (clone repo local)
+  model_name: facebook/dinov3-vitb16-pretrain-lvd1689m
+  torchhub_repo_dir: third_party/dinov3
+  torchhub_arch: dinov3_vitb16
+  torchhub_weights: null       # duong dan checkpoint .pth neu dung backend torchhub
+  device: cuda                 # cuda | cpu (tu dong fallback ve cpu neu khong co GPU)
+  embedding_dim: 768           # ViT-B/16 -> 768; doi theo model neu dung bien the khac
+  batch_size: 64
+  image_size: 224
+
+index:
+  static:
+    path: data/index/static_hnsw.index
+    id_map_path: data/index/static_id_map.npy
+    hnsw_m: 32
+    ef_construction: 200
+    ef_search: 128
+  dynamic:
+    buffer_path: data/index/dynamic_buffer.index
+    buffer_id_map_path: data/index/dynamic_id_map.npy
+    rebuild_threshold: 5000    # so item buffer truoc khi nen gop lai vao static index
+  blacklist:
+    path: data/index/blacklist.bin
+
+search:
+  top_n_candidates: 200        # so ung vien lay tu MOI index truoc khi rerank
+  top_k_final: 20
+  metric: cosine                # dang dung inner-product tren vector da L2-normalize = cosine

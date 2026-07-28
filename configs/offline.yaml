@@ -1,0 +1,26 @@
+model:
+  backend: hf                  # "hf" (Hugging Face, khuyen nghi) hoac "torchhub" (clone repo local)
+  name_or_path: facebook/dinov3-vitb16-pretrain-lvd1689m
+  torchhub_repo_dir: external/dinov3
+  torchhub_arch: dinov3_vitb16
+  torchhub_weights: null       # duong dan checkpoint .pth neu backend=torchhub
+  device: cuda
+  embedding_dim: 768           # ViT-B/16 -> 768; doi theo bien the model neu khac
+  image_size: 224
+  batch_size: 64
+
+dataset:
+  root: data/raw/Stanford_Online_Products
+  catalog_list: Ebay_train.txt   # dung lam catalog cho offline indexing
+
+index:
+  # HNSW: khong can train(), ho tro add() gia tang - phu hop catalog < ~1-2 trieu
+  # anh va lien tuc duoc them san pham moi. Xem docs/method_faiss_hnsw.md.
+  family: hnsw
+  hnsw_m: 32
+  ef_construction: 200
+
+paths:
+  artifacts_dir: data/index
+  static_index_path: data/index/static_hnsw.index
+  static_id_map_path: data/index/static_id_map.npy
