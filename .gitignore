@@ -8,3 +8,4 @@ data/index/*
 !data/index/.gitkeep
 *.pth
 .pytest_cache/
+*.env
