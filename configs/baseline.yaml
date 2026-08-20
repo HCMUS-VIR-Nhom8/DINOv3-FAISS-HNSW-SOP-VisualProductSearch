@@ -1,0 +1,37 @@
+seed: 42
+data:
+  csv: data/splits/sop_20k.csv
+  image_root: data/raw/Stanford_Online_Products
+  query_split: query
+  gallery_split: gallery
+  batch_size: 32
+  num_workers: 4
+
+preprocessing:
+  resize: [224, 224]
+  keep_aspect_ratio: false
+  center_crop: false
+
+model:
+  name: resnet50
+  pretrained: true
+  device: auto
+  batch_size: 32
+  normalize: true
+
+retrieval:
+  type: exact
+  metric: cosine
+  top_k: 100
+
+evaluation:
+  ks: [1, 5, 10, 20, 50, 100]
+  exclude_self: true
+
+output:
+  dir: outputs/baseline
+  embeddings: embeddings.npy
+  ids: gallery_ids.npy
+  results: retrieval_results.npz
+  metrics: metrics.json
+  benchmark: benchmark.json

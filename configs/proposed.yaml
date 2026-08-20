@@ -1,0 +1,59 @@
+seed: 42
+data:
+  csv: data/splits/sop_20k.csv
+  image_root: data/raw/Stanford_Online_Products
+  query_split: query
+  gallery_split: gallery
+  batch_size: 16
+  num_workers: 4
+
+preprocessing:
+  enabled: true
+  resize_long_side: 1024
+  target_size: 518
+  padding_ratio: 0.10
+  blur_threshold: 50.0
+  jpeg_threshold: 8.0
+  illumination_correction: true
+  clahe_clip_limit: 2.0
+  localization: disabled
+  segmentation: disabled
+  # Set these to true only after connecting real Grounding-DINO/SAM checkpoints.
+
+model:
+  name: facebook/dinov3-vitb16-pretrain-lvd1689m
+  backend: transformers
+  pretrained: true
+  device: auto
+  batch_size: 16
+  normalize: true
+
+retrieval:
+  type: hnsw
+  metric: cosine
+  top_k: 100
+  candidate_k: 100
+  M: 32
+  efConstruction: 200
+  efSearch: 64
+
+reranking:
+  enabled: true
+  mode: category_consistency
+  alpha_visual: 0.85
+  top_n: 100
+  # SOP provides class_id and super_class_id, but no title/brand/text metadata.
+  # category_consistency uses super_class_id only as candidate metadata.
+
+evaluation:
+  ks: [1, 5, 10, 20, 50, 100]
+  exclude_self: true
+
+output:
+  dir: outputs/proposed
+  embeddings: embeddings.npy
+  ids: gallery_ids.npy
+  index: hnsw.index
+  results: retrieval_results.npz
+  metrics: metrics.json
+  benchmark: benchmark.json
