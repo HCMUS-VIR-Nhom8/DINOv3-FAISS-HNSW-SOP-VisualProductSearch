@@ -1,0 +1,45 @@
+{
+  "model": {
+    "name": "facebook/dinov3-vitb16-pretrain-lvd1689m",
+    "local_path": null,
+    "source": "facebook/dinov3-vitb16-pretrain-lvd1689m",
+    "feature_dim": 768,
+    "device": "cuda"
+  },
+  "preprocessing": {
+    "resize_long_side": 1024,
+    "target_size": 518,
+    "padding_ratio": 0.1,
+    "blur_threshold": 50.0,
+    "jpeg_threshold": 8.0,
+    "illumination_correction": true,
+    "clahe_clip_limit": 2.0,
+    "localization": "disabled",
+    "segmentation": "disabled"
+  },
+  "retrieval": {
+    "type": "hnsw",
+    "M": 32,
+    "efConstruction": 200,
+    "efSearch": 64,
+    "candidate_k": 100
+  },
+  "reranking": {
+    "enabled": true,
+    "mode": "category_consistency",
+    "alpha_visual": 0.85,
+    "top_n": 100
+  },
+  "evaluation": {
+    "ks": [
+      1,
+      5,
+      10,
+      20,
+      50,
+      100
+    ],
+    "num_queries": 10000,
+    "seed": 42
+  }
+}
