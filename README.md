@@ -43,6 +43,10 @@ DINOv3 is a gated Hugging Face model; request access/login before running the pr
 
 ## Run
 
+### Option 1 - Run the Python scripts
+
+This is the recommended way to reproduce the experiment from the repository source code:
+
 ```bash
 python scripts/sample_sop.py --sop-root data/raw/Stanford_Online_Products
 
@@ -55,23 +59,41 @@ python scripts/evaluate.py --config configs/proposed.yaml
 pytest -q
 ```
 
-## Recommended experiment table
+### Option 2 - Run the notebooks on Kaggle / Google Colab
 
-| Method | Encoder | Retrieval | R@1 | R@10 | R@100 | mAP | Latency/query | Memory |
-|---|---|---|---:|---:|---:|---:|---:|---:|
-| Baseline | ResNet50 | Exact cosine | | | | | | |
-| Proposed-no-rerank | DINOv3 | HNSW | | | | | | |
-| Proposed | DINOv3 | HNSW + metadata | | | | | | |
+The repository also provides experiment notebooks under `notebooks`/. These notebooks can be run on Kaggle or Google Colab, where GPU acceleration and notebook secrets are available.
 
-The middle row is important: it isolates the effect of HNSW from the effect of re-ranking.
+Run the relevant notebooks in order and follow the paths/configuration specified by each notebook.
 
-## Memory definition used in the experiment
+**DINOv3: Hugging Face access and token**
 
-Report at least two memory views:
+DINOv3 is a private/gated Hugging Face model. Before running the proposed DINOv3 pipeline:
 
-- `gallery_embedding_memory_mb`: raw gallery embedding storage.
-- `hnsw_index_storage_mb`: serialized HNSW index size for the proposed method.
-- `total_retrieval_storage_mb`: storage cost of the retrieval representation/index.
-- `rss_delta_after_gallery_encoding_mb`: process RSS change as an engineering/runtime indicator.
+1.Request access to the exact DINOv3 checkpoint used by this project on Hugging Face.
+2. After access is granted, authenticate with Hugging Face.
+3. On Kaggle/Colab, store the token in the platform's Secrets and expose it as HF_TOKEN.
+4. Do not paste the token directly into notebook cells. Do not hard-code the token or commit it to Git.
 
-This avoids confusing model memory with index/embedding storage.
+For local/script execution, Hugging Face CLI authentication can be used:
+
+```bash
+hf auth login  --token SECRET_HF_TOKEN --add-to-git-credential
+```
+
+For Kaggle/Colab, the preferred approach is to read the token from the environment/secret manager:
+
+```python
+import os
+
+hf_token = os.environ.get("HF_TOKEN")
+if not hf_token:
+    raise RuntimeError(
+        "HF_TOKEN is not set. Add your Hugging Face token via Kaggle/Colab Secrets."
+    )   
+```
+
+A valid token alone is not sufficient if access to the DINOv3 checkpoint has not been granted.
+
+#### Reproducibility note
+
+The script and notebook workflows are two execution interfaces for the same experiment, not two different methods. They should use the same dataset, split, model checkpoint, configuration, and evaluation protocol. The notebook workflow is especially useful for GPU execution and interactive inspection on Kaggle/Colab.
