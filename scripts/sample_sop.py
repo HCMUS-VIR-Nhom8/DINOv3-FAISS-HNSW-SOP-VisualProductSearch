@@ -64,7 +64,7 @@ def make_query_gallery(df, query_fraction=0.2, seed=42):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--sop-root", required=True)
-    ap.add_argument("--output", default="data/splits/sop_20k.csv")
+    ap.add_argument("--output", default="data/sampled/sop_20k.csv")
     ap.add_argument("--n", type=int, default=20000)
     ap.add_argument("--query-fraction", type=float, default=0.2)
     ap.add_argument("--seed", type=int, default=42)

@@ -1,6 +1,6 @@
 seed: 42
 data:
-  csv: data/splits/sop_20k.csv
+  csv: data/sampled/sop_20k.csv
   image_root: data/raw/Stanford_Online_Products
   query_split: query
   gallery_split: gallery
